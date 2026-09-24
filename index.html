@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Labyrinth Quest | Многоуровневый лабиринт</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="level-info">
+                <span class="label">Уровень</span>
+                <span id="levelNumber" class="level-value">1</span>
+            </div>
+            <div class="game-title">
+                <h1>🏆 LABYRINTH QUEST</h1>
+                <div class="subtitle">Найди выход из лабиринта</div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-icon">⭐</span>
+                    <span id="movesCount" class="stat-value">0</span>
+                    <span class="stat-label">ходов</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">🕒</span>
+                    <span id="timerDisplay" class="stat-value">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+        <div class="game-controls">
+            <button id="resetBtn" class="control-btn">🔄 Новый уровень</button>
+            <button id="prevBtn" class="control-btn" disabled>◀ Пред. уровень</button>
+            <button id="nextBtn" class="control-btn">След. уровень ▶</button>
+            <button id="hintBtn" class="control-btn hint">💡 Подсказка</button>
+        </div>
+
+        <div class="game-status">
+            <div id="statusMessage" class="status-message">✨ Используй стрелки или WASD для движения</div>
+        </div>
+
+        <div class="instructions">
+            <div class="instruction-item">← ↑ ↓ →</div>
+            <div class="instruction-item">W A S D</div>
+            <div class="instruction-item">💎 Собери все монеты</div>
+            <div class="instruction-item">🚪 Найди выход</div>
+        </div>
+    </div>
+
+    <div id="victoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">🎉 ПОБЕДА! 🎉</div>
+            <div class="modal-body">
+                <p>Ты прошёл уровень <span id="completedLevel"></span>!</p>
+                <p>Ходов сделано: <span id="finalMoves"></span></p>
+                <p>Время прохождения: <span id="finalTime"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="nextLevelBtn" class="modal-btn">Следующий уровень 🚀</button>
+                <button id="restartLevelBtn" class="modal-btn secondary">Пройти заново 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
