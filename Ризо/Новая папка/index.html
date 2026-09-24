@@ -1,0 +1,167 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Современная таблица студентов | Выбор факультета</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="table-card">
+      <div class="card-header">
+        <div class="title-section">
+          <h1>🎓 Список студентов</h1>
+          <p>Управление данными • Выбор факультета из списка</p>
+        </div>
+        <button class="btn-primary" id="addStudentBtn">
+          <span class="btn-icon">+</span>
+          Добавить студента
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="modern-table" id="studentTable">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>ФИО студента</th>
+              <th>Факультет</th>
+              <th>Курс</th>
+              <th>Группа</th>
+              <th>Статус</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Пустые строки-примеры (без имен) -->
+            <tr>
+              <td>1</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">_</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false"><span class="status-badge">Не указан</span></td>
+              <td class="actions-cell">
+                <button class="action-btn edit-btn" title="Редактировать">✏️</button>
+                <button class="action-btn delete-btn" title="Удалить">🗑️</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">_</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false"><span class="status-badge">Не указан</span></td>
+              <td class="actions-cell">
+                <button class="action-btn edit-btn" title="Редактировать">✏️</button>
+                <button class="action-btn delete-btn" title="Удалить">🗑️</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false">_</td>
+              <td contenteditable="false">__________________</td>
+              <td contenteditable="false"><span class="status-badge">Не указан</span></td>
+              <td class="actions-cell">
+                <button class="action-btn edit-btn" title="Редактировать">✏️</button>
+                <button class="action-btn delete-btn" title="Удалить">🗑️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="table-footer">
+        <div class="stats" id="tableStats">
+          <span>📊 Всего студентов: <strong id="studentCount">0</strong></span>
+        </div>
+        <div class="footer-note">
+          💡 Выберите факультет из списка • Заполните свои данные
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для добавления/редактирования -->
+  <div id="studentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Добавить студента</h2>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="studentForm">
+          <div class="form-group">
+            <label>ФИО студента *</label>
+            <input type="text" id="studentName" placeholder="Иванов Иван Иванович" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Факультет *</label>
+            <select id="studentFaculty" required>
+              <option value="">Выберите факультет</option>
+              <option value="Информационных технологий">💻 Информационных технологий</option>
+              <option value="Экономический">📊 Экономический</option>
+              <option value="Юридический">⚖️ Юридический</option>
+              <option value="Медицинский">🏥 Медицинский</option>
+              <option value="Инженерный">🔧 Инженерный</option>
+              <option value="Филологический">📖 Филологический</option>
+              <option value="Физико-математический">🔬 Физико-математический</option>
+              <option value="Химический">🧪 Химический</option>
+              <option value="Биологический">🧬 Биологический</option>
+              <option value="Психологии">🧠 Психологии</option>
+              <option value="Журналистики">📰 Журналистики</option>
+              <option value="Дизайна">🎨 Дизайна</option>
+              <option value="Архитектуры">🏛️ Архитектуры</option>
+              <option value="Социологии">👥 Социологии</option>
+              <option value="Политологии">🗳️ Политологии</option>
+            </select>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Курс</label>
+              <input type="number" id="studentCourse" placeholder="1-6" min="1" max="6" value="1">
+            </div>
+            <div class="form-group">
+              <label>Группа</label>
+              <input type="text" id="studentGroup" placeholder="Например: ИТ-311">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Статус</label>
+            <select id="studentStatus">
+              <option value="Активный">🟢 Активный</option>
+              <option value="Не указан">⚪ Не указан</option>
+              <option value="Выпускник">🎓 Выпускник</option>
+              <option value="Академический отпуск">📚 Академический отпуск</option>
+              <option value="Новичок">🆕 Новичок</option>
+              <option value="Отчислен">❌ Отчислен</option>
+            </select>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancelModalBtn">Отмена</button>
+            <button type="submit" class="btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кнопка экспорта (дополнительная функция) -->
+  <div class="export-btn-container">
+    <button class="btn-export" id="exportBtn">
+      📥 Экспорт в CSV
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

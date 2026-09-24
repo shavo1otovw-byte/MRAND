@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>30 интерактивных задач на JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #e9eef4 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            overflow: hidden;
+            padding: 1.5rem;
+        }
+        h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.9rem;
+            color: #1a2c3e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .sub {
+            color: #2c4c6e;
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+            margin: 10px 0 20px 0;
+            font-weight: 500;
+        }
+        /* вкладки */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #cddae9;
+            padding-bottom: 8px;
+        }
+        .tab-btn {
+            background: #f0f2f8;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        .tab-btn.active {
+            background: #1e4a76;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        /* сетка карточек */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: transform 0.1s ease;
+            border: 1px solid #e2edff;
+        }
+        .card h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.2rem;
+            color: #0f2b3d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #3b82f6;
+            padding-left: 12px;
+        }
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input, button, select {
+            padding: 8px 12px;
+            border-radius: 60px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+        }
+        button {
+            background: #1f6392;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(95deg, #1e4a76, #1f6392);
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        .result {
+            background: #f0f4fa;
+            padding: 8px 12px;
+            border-radius: 1.2rem;
+            font-size: 0.9rem;
+            color: #0a2b3e;
+            word-break: break-word;
+            margin-top: 6px;
+        }
+        .inline-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        hr {
+            margin: 6px 0;
+        }
+        .badge {
+            font-size: 0.7rem;
+            background: #dee5f0;
+            border-radius: 50px;
+            padding: 2px 8px;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #4b6e8a;
+        }
+        @media (max-width: 700px) {
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✨ 30 интерактивных задач <span style="font-size:0.8rem;">JS + DOM</span></h1>
+    <div class="sub">Ввод, вывод, массивы, строки, события — полный набор</div>
+    
+    <div class="tabs" id="tabsContainer"></div>
+    
+    <div id="tasksContainer" class="tasks-grid"></div>
+    <footer>⚡ Каждая карточка — отдельный компонент. Попробуйте все!</footer>
+</div>
+
+<script>
+    // ---------- ВСЕ 30 ЗАДАЧ в виде конфигурации ----------
+    const tasks = [
+        { // 1
+            title: "1️⃣ Приветствие", 
+            render: (card) => {
+                const input = document.createElement("input");
+                input.placeholder = "Ваше имя";
+                const btn = document.createElement("button");
+                btn.textContent = "Показать приветствие";
+                const resultDiv = document.createElement("div");
+                resultDiv.className = "result";
+                btn.onclick = () => {
+                    const name = input.value.trim();
+                    resultDiv.textContent = name ? `👋 Привет, ${name}!` : "❌ Введите имя";
+                };
+                card.append(input, btn, resultDiv);
+            }
+        },
+        { // 2
+            title: "2️⃣ Чётное / Нечётное",
+            render: (card) => {
+                const input = document.createElement("input");
+                input.type = "number";
+                input.placeholder = "Введите число";
+                const btn = document.createElement("button");
+                btn.textContent = "Проверить";
+                const res = document.createElement("div");
+                res.className = "result";
+                btn.onclick = () => {
+                    let val = input.value.trim();
+                    if(val === "") { res.textContent = "Введите число"; return; }
+                    let num = Number(val);
+                    if(isNaN(num)) res.textContent = "Некорректное число";
+                    else res.textContent = num % 2 === 0 ? `✅ ${num} — чётное` : `🔹 ${num} — нечётное`;
+                };
+                card.append(input, btn, res);
+            }
+        },
+        { // 3
+            title: "3️⃣ Сумма двух чисел",
+            render: (card) => {
+                const inpA = document.createElement("input"); inpA.placeholder = "Число A"; inpA.type = "number";
+                const inpB = document.createElement("input"); inpB.placeholder = "Число B"; inpB.type = "number";
+                const btn = document.createElement("button"); btn.textContent = "Сумма";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let a = parseFloat(inpA.value);
+                    let b = parseFloat(inpB.value);
+                    if(isNaN(a)) a = 0;
+                    if(isNaN(b)) b = 0;
+                    res.textContent = `🧮 Сумма = ${a + b}`;
+                };
+                card.append(inpA, inpB, btn, res);
+            }
+        },
+        { // 4
+            title: "4️⃣ Конвертер °C ↔ °F",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "Температура";
+                const select = document.createElement("select");
+                select.innerHTML = `<option value="CtoF">Цельсий → Фаренгейт</option><option value="FtoC">Фаренгейт → Цельсий</option>`;
+                const btn = document.createElement("button"); btn.textContent = "Конвертировать";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let val = parseFloat(inp.value);
+                    if(isNaN(val)) { res.textContent = "Введите число"; return; }
+                    let out;
+                    if(select.value === "CtoF") out = (val * 9/5) + 32;
+                    else out = (val - 32) * 5/9;
+                    res.textContent = `Результат: ${out.toFixed(2)} ${select.value === "CtoF" ? "°F" : "°C"}`;
+                };
+                card.append(inp, select, btn, res);
+            }
+        },
+        { // 5
+            title: "5️⃣ Максимум из двух",
+            render: (card) => {
+                const a = document.createElement("input"); a.placeholder = "число 1"; a.type = "number";
+                const b = document.createElement("input"); b.placeholder = "число 2"; b.type = "number";
+                const btn = document.createElement("button"); btn.textContent = "Найти максимум";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let x = parseFloat(a.value), y = parseFloat(b.value);
+                    if(isNaN(x)) x = -Infinity; if(isNaN(y)) y = -Infinity;
+                    if(x === -Infinity && y === -Infinity) res.textContent = "Введите числа";
+                    else res.textContent = `📈 Максимум: ${Math.max(x, y)}`;
+                };
+                card.append(a, b, btn, res);
+            }
+        },
+        { // 6
+            title: "6️⃣ Доступ по возрасту",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.type = "number"; inp.placeholder = "Ваш возраст";
+                const btn = document.createElement("button"); btn.textContent = "Проверить доступ";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let age = parseInt(inp.value);
+                    if(isNaN(age)) res.textContent = "Введите возраст";
+                    else res.textContent = age >= 18 ? "✅ Доступ разрешён" : "⛔ Доступ запрещён";
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 7
+            title: "7️⃣ Случайное число",
+            render: (card) => {
+                const btn = document.createElement("button"); btn.textContent = "🎲 Сгенерировать";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let rand = Math.floor(Math.random() * 100) + 1;
+                    res.textContent = `🎲 Случайное число: ${rand}`;
+                };
+                card.append(btn, res);
+            }
+        },
+        { // 8
+            title: "8️⃣ Количество символов",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "Введите текст";
+                const res = document.createElement("div"); res.className = "result";
+                const update = () => {
+                    res.textContent = `📏 Длина: ${inp.value.length} симв.`;
+                };
+                inp.addEventListener("input", update);
+                update();
+                card.append(inp, res);
+            }
+        },
+        { // 9
+            title: "9️⃣ Регистр текста",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "текст";
+                const btnUp = document.createElement("button"); btnUp.textContent = "ВЕРХНИЙ";
+                const btnLow = document.createElement("button"); btnLow.textContent = "нижний";
+                const res = document.createElement("div"); res.className = "result";
+                btnUp.onclick = () => res.textContent = inp.value.toUpperCase();
+                btnLow.onclick = () => res.textContent = inp.value.toLowerCase();
+                card.append(inp, btnUp, btnLow, res);
+            }
+        },
+        { // 10
+            title: "🔟 Проверка пароля",
+            render: (card) => {
+                const pass = document.createElement("input"); pass.type = "password"; pass.placeholder = "Пароль";
+                const btn = document.createElement("button"); btn.textContent = "Проверить длину";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let len = pass.value.length;
+                    if(len === 0) res.textContent = "Введите пароль";
+                    else if(len >= 6) res.textContent = `✅ Длина ${len} — надёжный`;
+                    else res.textContent = `⚠️ Слишком короткий (${len} симв.) минимум 6`;
+                };
+                card.append(pass, btn, res);
+            }
+        },
+        { // 11
+            title: "1️⃣1️⃣ Сумма массива",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "числа через запятую (1,2,3)";
+                const btn = document.createElement("button"); btn.textContent = "Суммировать";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let str = inp.value;
+                    let arr = str.split(",").map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+                    let sum = arr.reduce((acc, v) => acc + v, 0);
+                    res.textContent = `Сумма элементов: ${sum}`;
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 12
+            title: "1️⃣2️⃣ Чётные из массива",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "числа, например: 1,2,3,4,5";
+                const btn = document.createElement("button"); btn.textContent = "Вывести чётные";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let items = inp.value.split(",").map(s => parseInt(s.trim())).filter(v => !isNaN(v));
+                    let evens = items.filter(n => n % 2 === 0);
+                    res.textContent = evens.length ? `✅ чётные: ${evens.join(", ")}` : "Нет чётных чисел";
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 13
+            title: "1️⃣3️⃣ Максимум массива",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "числа через запятую";
+                const btn = document.createElement("button"); btn.textContent = "Найти максимум";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let arr = inp.value.split(",").map(Number).filter(v => !isNaN(v));
+                    if(!arr.length) res.textContent = "Введите хотя бы одно число";
+                    else res.textContent = `🏆 Максимум: ${Math.max(...arr)}`;
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 14
+            title: "1️⃣4️⃣ Развернуть строку",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "строка";
+                const btn = document.createElement("button"); btn.textContent = "Развернуть";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let rev = inp.value.split("").reverse().join("");
+                    res.textContent = rev ? `🔁 ${rev}` : "Введите текст";
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 15
+            title: "1️⃣5️⃣ Палиндром?",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "Проверить слово/фразу";
+                const btn = document.createElement("button"); btn.textContent = "Проверить";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let raw = inp.value;
+                    let cleaned = raw.toLowerCase().replace(/[^а-яa-z0-9]/g, '');
+                    let isPal = cleaned === cleaned.split("").reverse().join("");
+                    res.textContent = isPal ? "✨ Это палиндром!" : "❌ Не палиндром";
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 16
+            title: "1️⃣6️⃣ Сортировка чисел",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "числа: 5,3,8,1";
+                const btn = document.createElement("button"); btn.textContent = "Сортировать";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let arr = inp.value.split(",").map(Number).filter(v => !isNaN(v));
+                    let sorted = [...arr].sort((a,b)=>a-b);
+                    res.textContent = sorted.length ? `📊 По возрастанию: ${sorted.join(", ")}` : "Введите числа";
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 17
+            title: "1️⃣7️⃣ Удалить дубликаты",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "1,2,2,3,4,4,5";
+                const btn = document.createElement("button"); btn.textContent = "Убрать дубликаты";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let items = inp.value.split(",").map(s => s.trim());
+                    let unique = [...new Set(items)];
+                    res.textContent = `Уникальные: ${unique.join(", ")}`;
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 18
+            title: "1️⃣8️⃣ Подсчёт слов",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "текст для подсчёта слов";
+                const btn = document.createElement("button"); btn.textContent = "Слова";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let words = inp.value.trim().split(/\s+/).filter(w => w.length > 0);
+                    res.textContent = `📖 Количество слов: ${words.length}`;
+                };
+                card.append(inp, btn, res);
+            }
+        },
+        { // 19
+            title: "1️⃣9️⃣ Анкета пользователя",
+            render: (card) => {
+                const nameInp = document.createElement("input"); nameInp.placeholder = "Имя";
+                const ageInp = document.createElement("input"); ageInp.placeholder = "Возраст"; ageInp.type = "number";
+                const btn = document.createElement("button"); btn.textContent = "Показать данные";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    if(!nameInp.value.trim()) {res.textContent = "Укажите имя"; return;}
+                    let age = ageInp.value;
+                    res.textContent = `👤 Пользователь: ${nameInp.value}, возраст: ${age || "не указан"}`;
+                };
+                card.append(nameInp, ageInp, btn, res);
+            }
+        },
+        { // 20
+            title: "2️⃣0️⃣ Сгенерировать список UL/LI",
+            render: (card) => {
+                const btn = document.createElement("button"); btn.textContent = "Создать список (пример: яблоко, банан)";
+                const res = document.createElement("div"); res.className = "result";
+                const ulContainer = document.createElement("div");
+                btn.onclick = () => {
+                    const items = ["JavaScript", "HTML", "CSS", "React"];
+                    const ul = document.createElement("ul");
+                    ul.style.marginTop = "8px";
+                    ul.style.paddingLeft = "20px";
+                    items.forEach(item => { const li = document.createElement("li"); li.textContent = item; ul.appendChild(li); });
+                    ulContainer.innerHTML = "";
+                    ulContainer.appendChild(ul);
+                    res.textContent = "✨ Список технологий:";
+                };
+                card.append(btn, res, ulContainer);
+            }
+        },
+        { // 21
+            title: "2️⃣1️⃣ Изменить текст блока",
+            render: (card) => {
+                const block = document.createElement("div"); block.textContent = "🔹 Исходный текст"; block.style.background = "#eef2ff"; block.style.padding = "8px"; block.style.borderRadius = "20px"; block.style.margin = "6px 0";
+                const btn = document.createElement("button"); btn.textContent = "Изменить текст";
+                btn.onclick = () => { block.textContent = "✅ Текст был изменён!"; };
+                card.append(block, btn);
+            }
+        },
+        { // 22
+            title: "2️⃣2️⃣ Скрыть/Показать блок",
+            render: (card) => {
+                const target = document.createElement("div"); target.textContent = "🟢 Я видимый блок!"; target.style.background = "#d9f0ec"; target.style.padding = "10px"; target.style.borderRadius = "16px"; target.style.margin = "8px 0";
+                const toggleBtn = document.createElement("button"); toggleBtn.textContent = "Скрыть";
+                let hidden = false;
+                toggleBtn.onclick = () => {
+                    hidden = !hidden;
+                    target.style.display = hidden ? "none" : "block";
+                    toggleBtn.textContent = hidden ? "Показать" : "Скрыть";
+                };
+                card.append(target, toggleBtn);
+            }
+        },
+        { // 23
+            title: "2️⃣3️⃣ Клик → изменить цвет",
+            render: (card) => {
+                const colorBlock = document.createElement("div"); colorBlock.textContent = "🎨 Кликни меня!"; colorBlock.style.background = "#fcd34d"; colorBlock.style.padding = "12px"; colorBlock.style.borderRadius = "20px"; colorBlock.style.textAlign = "center"; colorBlock.style.cursor = "pointer"; colorBlock.style.transition = "0.1s";
+                const colors = ["#f87171", "#60a5fa", "#34d399", "#fbbf24", "#c084fc"];
+                let idx = 0;
+                colorBlock.onclick = () => {
+                    idx = (idx+1)%colors.length;
+                    colorBlock.style.backgroundColor = colors[idx];
+                };
+                card.append(colorBlock);
+            }
+        },
+        { // 24
+            title: "2️⃣4️⃣ Добавить в список (UI)",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "Новый элемент";
+                const btn = document.createElement("button"); btn.textContent = "Добавить";
+                const listUl = document.createElement("ul"); listUl.style.margin = "8px 0 0 16px"; listUl.style.maxHeight = "100px"; listUl.style.overflow = "auto";
+                btn.onclick = () => {
+                    if(inp.value.trim() === "") return;
+                    const li = document.createElement("li"); li.textContent = inp.value;
+                    listUl.appendChild(li);
+                    inp.value = "";
+                };
+                card.append(inp, btn, listUl);
+            }
+        },
+        { // 25
+            title: "2️⃣5️⃣ Удалить элемент по клику",
+            render: (card) => {
+                const containerList = document.createElement("div");
+                const sample = ["Пункт A", "Пункт B", "Пункт C"];
+                const ul = document.createElement("ul");
+                const refreshList = () => {
+                    ul.innerHTML = "";
+                    sample.forEach((txt, idx) => {
+                        const li = document.createElement("li");
+                        li.textContent = txt;
+                        li.style.cursor = "pointer";
+                        li.style.margin = "4px 0";
+                        li.onclick = () => {
+                            sample.splice(idx, 1);
+                            refreshList();
+                        };
+                        ul.appendChild(li);
+                    });
+                };
+                refreshList();
+                card.append(document.createTextNode("🔽 Кликни по элементу, чтобы удалить"), ul);
+            }
+        },
+        { // 26
+            title: "2️⃣6️⃣ Проверка на пустые поля",
+            render: (card) => {
+                const name = document.createElement("input"); name.placeholder = "Имя *";
+                const email = document.createElement("input"); email.placeholder = "Email *";
+                const btn = document.createElement("button"); btn.textContent = "Отправить";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    if(!name.value.trim() || !email.value.trim()) res.textContent = "❌ Заполните все поля!";
+                    else res.textContent = `✅ Принято: ${name.value}, ${email.value}`;
+                };
+                card.append(name, email, btn, res);
+            }
+        },
+        { // 27
+            title: "2️⃣7️⃣ Живой вывод текста (live)",
+            render: (card) => {
+                const inp = document.createElement("input"); inp.placeholder = "Печатай ...";
+                const preview = document.createElement("div"); preview.className = "result"; preview.textContent = "Тут отобразится текст";
+                inp.addEventListener("input", (e) => { preview.textContent = e.target.value || "⌨️ Введите что-нибудь"; });
+                card.append(inp, preview);
+            }
+        },
+        { // 28
+            title: "2️⃣8️⃣ Модальное окно (popup)",
+            render: (card) => {
+                const openBtn = document.createElement("button"); openBtn.textContent = "Открыть модалку";
+                let modal = null;
+                const closeModal = () => { if(modal) modal.remove(); modal = null; };
+                openBtn.onclick = () => {
+                    if(modal) return;
+                    modal = document.createElement("div");
+                    modal.style.position = "fixed"; modal.style.top = "0"; modal.style.left = "0"; modal.style.width = "100%"; modal.style.height = "100%";
+                    modal.style.background = "rgba(0,0,0,0.5)"; modal.style.display = "flex"; modal.style.alignItems = "center"; modal.style.justifyContent = "center"; modal.style.zIndex = "1000";
+                    const pop = document.createElement("div"); pop.style.backgroundColor = "white"; pop.style.padding = "24px"; pop.style.borderRadius = "32px"; pop.style.minWidth = "220px"; pop.style.textAlign = "center";
+                    pop.innerHTML = `<h4>Модальное окно</h4><p>Произвольный контент</p><button id="modalClose">Закрыть</button>`;
+                    modal.appendChild(pop);
+                    document.body.appendChild(modal);
+                    document.getElementById("modalClose").onclick = closeModal;
+                    modal.onclick = (e) => { if(e.target === modal) closeModal(); };
+                };
+                card.append(openBtn);
+            }
+        },
+        { // 29
+            title: "2️⃣9️⃣ Калькулятор (+ - * /)",
+            render: (card) => {
+                const a = document.createElement("input"); a.placeholder = "число A"; a.type = "number";
+                const b = document.createElement("input"); b.placeholder = "число B"; b.type = "number";
+                const ops = ["+", "-", "*", "/"];
+                const sel = document.createElement("select");
+                ops.forEach(op => { let opt = document.createElement("option"); opt.value = op; opt.textContent = op; sel.appendChild(opt); });
+                const btn = document.createElement("button"); btn.textContent = "Вычислить";
+                const res = document.createElement("div"); res.className = "result";
+                btn.onclick = () => {
+                    let x = parseFloat(a.value), y = parseFloat(b.value);
+                    if(isNaN(x) || isNaN(y)) { res.textContent = "Введите оба числа"; return; }
+                    let r;
+                    switch(sel.value) {
+                        case "+": r = x + y; break;
+                        case "-": r = x - y; break;
+                        case "*": r = x * y; break;
+                        case "/": r = y !== 0 ? x / y : "∞ (деление на 0)"; break;
+                    }
+                    res.textContent = `${x} ${sel.value} ${y} = ${r}`;
+                };
+                card.append(a, b, sel, btn, res);
+            }
+        },
+        { // 30
+            title: "3️⃣0️⃣ Игра 'Угадай число'",
+            render: (card) => {
+                let secret = Math.floor(Math.random() * 100) + 1;
+                let attempts = 0;
+                const guessInp = document.createElement("input"); guessInp.type = "number"; guessInp.placeholder = "Твоё число (1-100)";
+                const btnGuess = document.createElement("button"); btnGuess.textContent = "Проверить";
+                const resetBtn = document.createElement("button"); resetBtn.textContent = "🔄 Новая игра";
+                const msg = document.createElement("div"); msg.className = "result"; msg.textContent = "🎯 Загадано число от 1 до 100!";
+                btnGuess.onclick = () => {
+                    let g = parseInt(guessInp.value);
+                    if(isNaN(g)) { msg.textContent = "Введи число!"; return; }
+                    attempts++;
+                    if(g === secret) { msg.textContent = `🎉 Поздравляю! Угадал за ${attempts} попыток!`; }
+                    else if(g < secret) msg.textContent = `📈 Загаданное БОЛЬШЕ, чем ${g}`;
+                    else msg.textContent = `📉 Загаданное МЕНЬШЕ, чем ${g}`;
+                };
+                resetBtn.onclick = () => { secret = Math.floor(Math.random() * 100) + 1; attempts = 0; msg.textContent = "✨ Новая игра! Число от 1 до 100"; guessInp.value = ""; };
+                card.append(guessInp, btnGuess, resetBtn, msg);
+            }
+        }
+    ];
+
+    // Рендер с вкладками без потери состояния (только отображение)
+    let currentTab = "all";
+    function renderUI() {
+        const tabsDiv = document.getElementById("tabsContainer");
+        const container = document.getElementById("tasksContainer");
+        if(!tabsDiv || !container) return;
+        // группы
+        const groups = [
+            { id: "all", label: "📋 Все задачи (30)" },
+            { id: "basic", label: "🔢 Ввод/вывод (1-10)" },
+            { id: "arrays", label: "📊 Массивы (11-17)" },
+            { id: "strings", label: "🔤 Строки (14-15,18, ...)" },
+            { id: "dom", label: "🎮 DOM, списки, игра (20-30)" }
+        ];
+        tabsDiv.innerHTML = "";
+        groups.forEach(gr => {
+            const btn = document.createElement("button");
+            btn.textContent = gr.label;
+            btn.classList.add("tab-btn");
+            if(currentTab === gr.id) btn.classList.add("active");
+            btn.onclick = () => { currentTab = gr.id; renderUI(); };
+            tabsDiv.appendChild(btn);
+        });
+        container.innerHTML = "";
+        let filtered = tasks.map((t, idx) => ({ t, idx }));
+        if(currentTab !== "all") {
+            if(currentTab === "basic") filtered = filtered.filter((_,i) => i >=0 && i <=9);
+            else if(currentTab === "arrays") filtered = filtered.filter((_,i) => i >=10 && i <=16);
+            else if(currentTab === "strings") filtered = filtered.filter((_,i) => i ===13 || i===14 || i===17);
+            else if(currentTab === "dom") filtered = filtered.filter((_,i) => i >=19);
+        }
+        filtered.forEach(({t, idx}) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            const h3 = document.createElement("h3");
+            h3.textContent = t.title;
+            card.appendChild(h3);
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "card-content";
+            card.appendChild(contentDiv);
+            t.render(contentDiv);
+            container.appendChild(card);
+        });
+    }
+    renderUI();
+</script>
+</body>
+</html>
